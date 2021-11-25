@@ -1,4 +1,4 @@
-package java
+package KotlinJava
 
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
