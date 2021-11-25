@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.misc
+package java
 
-import com.qualcomm.robotcore.util.ElapsedTime
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
 import kotlin.math.abs
@@ -8,7 +7,8 @@ import kotlin.math.sign
 
 class RegulatorPIDVAS (private val doubleConsumer: DoubleConsumer, private val doubleVelocity: DoubleSupplier, private val doubleSupplier: DoubleSupplier, private val kP: DoubleSupplier, private val kI: DoubleSupplier,
                        private val kD: DoubleSupplier, private val kV: DoubleSupplier, private val kA: DoubleSupplier, private val kS: DoubleSupplier, private val maxI: DoubleSupplier, private val kV_referenceVoltage: DoubleSupplier, private val activeBraking: Boolean = true){
-    private val updateTime = ElapsedTime()
+    private var updateTime = 0.0
+    private val startTime = System.nanoTime()
     private var velocityError = 0.0
     private var velocityErrorOld = 0.0
     private var P = 0.0
@@ -28,8 +28,9 @@ class RegulatorPIDVAS (private val doubleConsumer: DoubleConsumer, private val d
 
     }*/
     fun update(target: Double):Double {
-        timeDelta = updateTime.seconds() - timeOld
-        timeOld = updateTime.seconds()
+        updateTime = (System.nanoTime() - startTime).toDouble() / 1000000000.0
+        timeDelta = updateTime - timeOld
+        timeOld = updateTime
         currentVelocity = doubleVelocity.asDouble
         if (target != 0.0 || activeBraking) {
             voltageDelta = kV_referenceVoltage.asDouble / doubleSupplier.asDouble
